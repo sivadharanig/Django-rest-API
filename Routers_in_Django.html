@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routers in Django</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            color: #c7254e;
+            background-color: #f9f2f4;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Routers in Django</h1>
+
+    <h2>UUID in URL Parameters</h2>
+    <p>To include a UUID in your URL parameters, specify the datatype as follows:</p>
+    <pre><code>path('allCategoryOthers/&lt;uuid:pk&gt;/', CategoryView.as_view()),
+path('allCategory/&lt;uuid:pk&gt;/', CategoryView.as_view())</code></pre>
+    <p>To retrieve the data, use one of these methods:</p>
+    <pre><code>get_object('pk')
+kwargs.get('pk')</code></pre>
+
+    <h2>Registering App URLs in the Project</h2>
+    <p>There are two methods to register app URLs in your project:</p>
+
+    <h3>1. Normal URL Configuration</h3>
+    <p>Define the URL patterns in your app and include them in your project.</p>
+    <pre><code>urlpatterns = [
+    path('allCategoryOthers/', CategoryView.as_view()),
+    path('allCategoryOthers/&lt;uuid:pk&gt;/', CategoryView.as_view()),
+    path('allCategory/&lt;int:pk&gt;/', CategoryView.as_view()),
+    path('allCategoryOthersV2/&lt;uuid:pk&gt;/', CategoryViewVersion.as_view()),
+]</code></pre>
+
+    <h3>Project URL Configuration:</h3>
+    <pre><code>urlpatterns = [
+    path('Category/', include('category.urls')),
+]</code></pre>
+
+    <h3>2. Registering URLs Using DefaultRouter</h3>
+    <p>You can register app routes using <code>DefaultRouter</code> to handle ViewSets and include them in your project.</p>
+    <pre><code>from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('category', CategoryView)
+router.register('subcategory', SubcategoryView)
+router.register('question', QuestionView)
+router.register('FilteringCategory', QuestionViewSet, basename='Category')
+router.register('FilteringSubcategory', CategoryViewSet, basename='subCategory')
+router.register('ReferenceLinks', ReferenceView)
+router.register('FilteringReferenceLinks', ReferenceLinkViewSet, basename='ReferenceLinks')
+
+urlpatterns = [
+    path('api/', include(router.urls)),
+]</code></pre>
+
+    <h3>Project URL Configuration:</h3>
+    <pre><code>urlpatterns = [
+    path('', include('QuestionBank.urls')),
+]</code></pre>
+
+    <h2>Key Points When Using DefaultRouter</h2>
+    <ul>
+        <li>Ensure the view class inherits from <code>ViewSet</code>, <code>GenericViewSet</code>, or <code>ModelViewSet</code>.</li>
+        <li>Define methods corresponding to HTTP methods:</li>
+        <ul>
+            <li><code>list()</code> for <b>GET</b> <code>/products/</code></li>
+            <li><code>create()</code> for <b>POST</b> <code>/products/</code></li>
+            <li><code>retrieve()</code> for <b>GET</b> <code>/products/{id}/</code></li>
+            <li><code>update()</code> for <b>PUT</b> <code>/products/{id}/</code></li>
+            <li><code>destroy()</code> for <b>DELETE</b> <code>/products/{id}/</code></li>
+        </ul>
+    </ul>
+
+    <h2>App: Category (Using APIViews)</h2>
+    <p>This app uses class-based views (CBVs) and follows these practices:</p>
+    <ul>
+        <li>A single method (e.g., <code>get</code>, <code>post</code>) can be defined per view class.</li>
+        <li>If additional methods are needed, create another class.</li>
+    </ul>
+
+    <h2>Reference for URL Configuration</h2>
+    <p>For more information on URL configuration, see the <a href="https://docs.djangoproject.com/en/5.1/topics/http/urls/" target="_blank">Django Documentation</a>.</p>
+    <p><b>Examples:</b></p>
+    <ul>
+        <li>Function-based views:</li>
+        <pre><code>path('', views.home, name='home')</code></pre>
+        <li>Class-based views:</li>
+        <pre><code>path('', Home.as_view(), name='home')</code></pre>
+        <li>Including another URL configuration:</li>
+        <pre><code>path('blog/', include('blog.urls'))</code></pre>
+    </ul>
+</body>
+</html>

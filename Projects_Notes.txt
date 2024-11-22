@@ -1,0 +1,83 @@
+Routers
+-------
+--> if you need to get uuid in parrams you need ti make it with datatype like this
+
+# path('allCatageryOthers/<uuid:pk>/',catageryview.as_view()),
+# path('allCatagery/<uuid:pk>/',catageryview.as_view())
+
+    to Get The data
+    ---------------
+    get_object('pk')
+    kwargs.get('pk')
+
+--> if you need to to rigister your app urls in project there is 2 way
+"""
+URL configuration for product project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+--> DefaultRouter
+        Key Points to Ensure Compatibility
+        Inherit from a ViewSet Class: Use ViewSet, GenericViewSet, or ModelViewSet for your class.
+        Define Methods Corresponding to HTTP Methods:
+        list() for GET /products/
+        create() for POST /products/
+        retrieve() for GET /products/{id}/
+        update() for PUT /products/{id}/
+        destroy() for DELETE /products/{id}/
+
+1.Normal url configer in app and link with Projects
+----------------------------
+    urlpatterns=[
+        path('allCatageryOthers/',catageryview.as_view()),
+        path('allCatageryOthers/<uuid:pk>/',catageryview.as_view()),
+        path('allCatagery/<int:pk>/',catageryview.as_view()),
+        path('allCatageryOthersV2/<uuid:pk>/',catageryviewversion.as_view()),
+        # path('Name/', CustomeCatagery.as_view())
+    ]
+    Project urls
+    -------
+    path('Categery/', include("catagery.urls"))
+
+2.Rigister the router in app using Defaultrouter to add in Project
+------------------------------------------------
+router=DefaultRouter()
+router.register('category',Categoryview)
+router.register('subcategory',Subcategoryview)
+router.register('question',Questionview)
+router.register('FilteringCategory',questionViewSet,basename='Category')
+router.register('FilteringSubcategory',CategoryViewSet,basename='subCategory')
+router.register('Referencelinks',Referenceview)
+router.register('FilteringReferencelinks',ReferencelinkViewSet,basename='Referencelinks')
+
+urlpatterns = [
+    path('api/',include(router.urls)),
+    
+]
+Project urls
+    -------
+     path('', include("Questionbank.urls"))
+This project useing the all Django rest Framework  view modules or view sets
+
+
+App --> Catagery (APIViews)
+        # it is class based view  
+
+        # we able to use one method for only one time [get,post,.....] 
+
+        # if we need to use crate a another class 
+
+        # we cannot able to add DefaultRouter in APIViews
+App -->Productlist()
+

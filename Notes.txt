@@ -1,0 +1,24 @@
+# Create the Env
+python -m venv env
+
+#Activeta the Env
+env\Scripts\activate
+
+#Install request modules
+pip install djangorestframework
+
+#Create Project
+django-admin startproject Name
+
+#Create App
+1--> django-adnin startapp Name
+            (OR)
+2--> python manage.py startapp Name
+
+#Create table and save the changes in the table
+python manage.py makemigrations
+
+#migrate the changes
+python manage.py migrate
+
+python manage.py runserver
